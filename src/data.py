@@ -54,6 +54,7 @@ class MRAProjected(data.Dataset):
                 case_nums = sf.readlines()
             self.get_img_list(case_nums)
             self.raw_case_dirs = [self.orig_dir.joinpath(c.strip() + "/") for c in case_nums]
+            
         # If no split file, just use all image files
         else:
             self.get_img_list()
