@@ -19,10 +19,12 @@ class MRAProjected(data.Dataset):
             - /pre/TOF.nii.gz
 
     img_dir
-        - case_dir_axial*.png
-        - case_dir_axial*_label.png
-        - case_dir_sag*.png
-        - case_dir_sag*_label.png
+        -/raw
+            - /case_dir_axial*.png
+            - /case_dir_sag*.png
+        -/seg
+            - /case_dir_axial*_label.png
+            - /case_dir_sag*_label.png
     """
 
     def __init__(self, cfg, transform=None, mode="train"):
