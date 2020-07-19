@@ -3,7 +3,7 @@ from yacs.config import CfgNode as CN
 _C = CN()
 
 _C.MODEL = CN()
-_C.MODEL.DEVICES = "0, 1"
+_C.MODEL.DEVICES = "0,1"
 _C.MODEL.USE_GAN = 0
 _C.MODEL.IMAGE_SIZE = 512
 _C.MODEL.USE_BN = 1
