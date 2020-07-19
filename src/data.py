@@ -2,8 +2,8 @@ import pathlib
 import numpy as np
 import torch
 import torch.utils.data as data
-import nibabel as nib
-import imageio
+import torchvision.transforms as transforms
+import PIL.Image as Image
 
 
 class MRAProjected(data.Dataset):
@@ -35,6 +35,7 @@ class MRAProjected(data.Dataset):
         # Dictionary storing paths of all axial and sagittal images to use for dataset
         self.img_list = {"axial": [], "sag": []}
         self.transform = transform
+        self.resize = transforms.Resize((256, 256))
         self.mode = mode
 
         # Set the split file
@@ -66,17 +67,19 @@ class MRAProjected(data.Dataset):
         sag_path = self.img_list["sag"][index]
 
         axial_label_path = str(axial_path)[:-4].replace("raw", "seg") + "_label.png"
-        print(axial_label_path)
         sag_label_path = str(sag_path)[:-4].replace("raw", "seg") + "_label.png"
-        print(sag_label_path)
 
-        axial_img = imageio.imread(str(axial_path)).transpose(2, 0, 1)
-        sag_img = imageio.imread(str(sag_path)).transpose(2, 0, 1)
+        axial_img = self.resize(Image.open(str(axial_path)))
+        axial_img = transforms.ToTensor()(axial_img)
+        sag_img = self.resize(Image.open(str(sag_path)))
+        sag_img = transforms.ToTensor()(sag_img)
 
         # TODO size of axial and sag img should be the same???
 
-        axial_label = imageio.imread(str(axial_label_path)).transpose(2, 0, 1)
-        sag_label = imageio.imread(str(sag_label_path)).transpose(2, 0, 1)
+        axial_label = self.resize(Image.open(str(axial_label_path)))
+        axial_label = transforms.ToTensor()(axial_label)
+        sag_label = self.resize(Image.open(str(sag_label_path)))
+        sag_label = transforms.ToTensor()(sag_label)
 
         # TODO size of axial and sag label should be the same
 
