@@ -77,9 +77,9 @@ class MRAProjected(data.Dataset):
         # TODO size of axial and sag label should be the same
 
         img_name = str(axial_path).split("/")[-1]
-        case_num = img_name[0:6]
+        case_num = img_name[0:5]
 
-        sample = {"top_image": axial_img, "bottom_img": sag_img, "top_label": axial_label, "bottom_label": sag_label,
+        sample = {"top_image": axial_img, "bottom_image": sag_img, "top_label": axial_label, "bottom_label": sag_label,
                   "case_num": case_num}
 
         return sample
@@ -99,8 +99,7 @@ class MRAProjected(data.Dataset):
             self.img_list["axial"].append(axial)
             self.img_list["sag"].append(sag)
 
-        elif isinstance(case_num, int):
-            case_num = str(case_num)
+        elif isinstance(case_num, str):
             ax_name = case_num + "_axial*.png"
             sag_name = case_num + "_sag*.png"
             axial = list(sorted(self.img_dir.glob("raw/" + ax_name)))
@@ -111,16 +110,20 @@ class MRAProjected(data.Dataset):
             ax_list = self.img_list.get("axial", [])
             sag_list = self.img_list.get("sag", [])
 
-            ax_list.append(i for i in axial)
-            sag_list.append(i for i in sag)
+            ax_list.append([i for i in axial])
+            sag_list.append([i for i in sag])
 
             self.img_list["axial"] = ax_list
             self.img_list["sag"] = sag_list
 
         elif isinstance(case_num, list):
             for num in case_num:
-                num = int(num.strip())
+                num = num.strip()
                 self.get_img_list(num)
+                
+            self.img_list["axial"] = [item for sublist in self.img_list["axial"] for item in sublist]
+            self.img_list["sag"] = [item for sublist in self.img_list["sag"] for item in sublist]
+
 
         else:
             raise Exception("Unrecognized format for case_num input")
