@@ -64,7 +64,7 @@ class SolverBtrfly(object):
                 in_top, in_bottom = sample["top_image"].cuda().to(dtype=torch.float), \
                                     sample["bottom_image"].cuda().to(dtype=torch.float)
                 gt_top, gt_bottom = sample["top_label"].cuda().to(dtype=torch.float), \
-                                    sample["bottom_label"].cuda().to(dtype=torch.long)
+                                    sample["bottom_label"].cuda().to(dtype=torch.float)
 
                 optim.zero_grad()
 
@@ -102,7 +102,7 @@ class SolverBtrfly(object):
                 in_top, in_bottom = sample["top_image"].cuda().to(dtype=torch.float), \
                                     sample["bottom_image"].cuda().to(dtype=torch.float)
                 gt_top, gt_bottom = sample["top_label"].cuda().to(dtype=torch.float), \
-                                    sample["bottom_label"].cuda().to(dtype=torch.long)
+                                    sample["bottom_label"].cuda().to(dtype=torch.float)
 
                 out_top, out_bottom = model(in_top, in_bottom)
                 loss = self.loss_func(out_top, out_bottom, gt_top, gt_bottom)
