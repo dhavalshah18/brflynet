@@ -77,9 +77,11 @@ class MRAProjected(data.Dataset):
         # TODO size of axial and sag img should be the same???
 
         axial_label = self.resize(Image.open(str(axial_label_path)))
-        axial_label = transforms.ToTensor()(axial_label)
+        axial_label = transforms.ToTensor()(axial_label)[0]
+        print(torch.unique(axial_label))
         sag_label = self.resize(Image.open(str(sag_label_path)))
-        sag_label = transforms.ToTensor()(sag_label)
+        sag_label = transforms.ToTensor()(sag_label)[0]
+        print(torch.unique(sag_label))
 
         # TODO size of axial and sag label should be the same
 
