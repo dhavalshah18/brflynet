@@ -27,15 +27,18 @@ class MRAProjected(data.Dataset):
             - /case_dir_sag*_label.png
     """
 
-    def __init__(self, cfg, transform=None, mode="train"):
+    def __init__(self, cfg, mode="train"):
         super().__init__()
         self.cfg = cfg
         self.orig_dir = pathlib.Path(cfg.ORIGINAL_PATH)
         self.img_dir = pathlib.Path(cfg.MIP_PATH)
         # Dictionary storing paths of all axial and sagittal images to use for dataset
         self.img_list = {"axial": [], "sag": []}
-        self.transform = transform
-        self.resize = transforms.Resize((256, 256))
+        self.transform = transforms.Compose([
+                            transforms.Resize((256, 256)),
+                            transforms.ToTensor(),
+#                             transforms.Normalize((0.0), (0.0039)),
+                            ])
         self.mode = mode
 
         # Set the split file
@@ -67,24 +70,20 @@ class MRAProjected(data.Dataset):
         axial_path = self.img_list["axial"][index]
         sag_path = self.img_list["sag"][index]
 
+        axial_img = self.transform(Image.open(str(axial_path)))
+        
+        sag_img = self.transform(Image.open(str(sag_path)))
+
         axial_label_path = str(axial_path)[:-4].replace("raw", "seg") + "_label.png"
         sag_label_path = str(sag_path)[:-4].replace("raw", "seg") + "_label.png"
-
-        axial_img = self.resize(Image.open(str(axial_path)))
-        axial_img = transforms.ToTensor()(axial_img)
-        sag_img = self.resize(Image.open(str(sag_path)))
-        sag_img = transforms.ToTensor()(sag_img)
-
-        # TODO size of axial and sag img should be the same???
-
-        axial_label = self.resize(Image.open(str(axial_label_path)))
-        axial_label = transforms.ToTensor()(axial_label)[0]
-        print(torch.unique(axial_label))
-        sag_label = self.resize(Image.open(str(sag_label_path)))
-        sag_label = transforms.ToTensor()(sag_label)[0]
-        print(torch.unique(sag_label))
-
-        # TODO size of axial and sag label should be the same
+        
+        axial_label = self.transform(Image.open(str(axial_label_path)))
+        axial_label[axial_label > 0.005] = 0.
+        sag_label[axial_label > 0.] = 1.
+        
+        sag_label = self.transform(Image.open(str(sag_label_path)))
+        sag_label[sag_label > 0.005] = 0.
+        sag_label[sag_label > 0.] = 1.
 
         img_name = str(axial_path).split("/")[-1]
         case_num = img_name[0:5]
