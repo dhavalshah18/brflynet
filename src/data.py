@@ -35,9 +35,8 @@ class MRAProjected(data.Dataset):
         # Dictionary storing paths of all axial and sagittal images to use for dataset
         self.img_list = {"axial": [], "sag": []}
         self.transform = transforms.Compose([
-                            transforms.Resize((256, 256)),
+                            transforms.Resize((cfg.MODEL.IMAGE_SIZE, cfg.MODEL.IMAGE_SIZE)),
                             transforms.ToTensor(),
-#                             transforms.Normalize((0.0), (0.0039)),
                             ])
         self.mode = mode
 
@@ -80,16 +79,24 @@ class MRAProjected(data.Dataset):
         axial_label = self.transform(Image.open(str(axial_label_path)))
         axial_label[axial_label > 0.005] = 0.
         axial_label[axial_label > 0.] = 1.
+        if len(torch.unique(axial_label)) > 1:
+            axial_aneurysm = True
+        else:
+            axial_aneurysm = False
         
         sag_label = self.transform(Image.open(str(sag_label_path)))
         sag_label[sag_label > 0.005] = 0.
         sag_label[sag_label > 0.] = 1.
+        if len(torch.unique(sag_label)) > 1:
+            sag_aneurysm = True
+        else:
+            sag_aneurysm = False
 
         img_name = str(axial_path).split("/")[-1]
         case_num = img_name[0:5]
 
         sample = {"top_image": axial_img, "bottom_image": sag_img, "top_label": axial_label, "bottom_label": sag_label,
-                  "case_num": case_num}
+                  "case_num": case_num, "top_aneurysm": axial_aneurysm, "bottom_aneurysm": sag_aneurysm}
 
         return sample
 
