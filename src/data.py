@@ -79,7 +79,7 @@ class MRAProjected(data.Dataset):
         
         axial_label = self.transform(Image.open(str(axial_label_path)))
         axial_label[axial_label > 0.005] = 0.
-        sag_label[axial_label > 0.] = 1.
+        axial_label[axial_label > 0.] = 1.
         
         sag_label = self.transform(Image.open(str(sag_label_path)))
         sag_label[sag_label > 0.005] = 0.
