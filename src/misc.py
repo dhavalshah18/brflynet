@@ -39,3 +39,16 @@ def compute_loss(out_top, out_bottom, gt_top, gt_bottom):
     loss_ce_bottom = torch.sum(torch.sum(torch.sum(torch.sum(prod_cor, dim=2), dim=2), dim=0))
 
     return loss_mse_top + loss_mse_bottom + loss_ce_bottom + loss_ce_top
+
+def compute_loss_ce(out_top, out_bottom, gt_top, gt_bottom):
+    if len(gt_top.size()) == 4 and len(gt_bottom.size()) == 4:
+        gt_top = gt_top.squeeze(1)
+        gt_bottom = gt_bottom.squeeze(1)
+        
+    assert len(out_top.size()) == 4 and len(out_bottom.size()) == 4
+    assert out_top.size(1) == 2 and out_bottom.size(1) == 2
+        
+    loss_ce_top = nn.CrossEntropyLoss(out_top, gt_top)
+    loss_ce_bottom = nn.CrossEntropyLoss(out_bottom, gt_bottom)
+    
+    return loss_ce_top + loss_ce_bottom

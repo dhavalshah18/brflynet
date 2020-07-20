@@ -1,15 +1,12 @@
 MODEL:
-  DEVICE: "1,2"
-  USE_GAN: 0
   IMAGE_SIZE: 256
   USE_BN: 1
-  CHANNELS: (1, 32, 64, 128, 256, 256, 512, 1024, 512, 512, 256, 128, 64, 25)
+  CHANNELS: (1, 32, 64, 128, 256, 256, 512, 1024, 512, 512, 256, 128, 64, 2)
 
 SOLVER:
-  LR: 3e-4
+  LR: 1e-3
   WEIGHT_DECAY: 1e-3
-  MAX_ITER: 500000
-  BATCH_SIZE: 2
+  BATCH_SIZE: 16
   SAVE_NUM: 5
 
 TEST:
@@ -22,4 +19,4 @@ MIP_PATH: "/home/dhaval/mip"
 TRAIN_SPLIT_FILE: "/home/dhaval/mip/train.txt"
 VAL_SPLIT_FILE: "/home/dhaval/mip/val.txt"
 
-OUTPUT_PATH: "/home/dhaval/outputs"
+OUTPUT_PATH: "/home/dhaval/btrfly_outputs"
