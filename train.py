@@ -29,10 +29,10 @@ def train(cfg, args=None):
 
     optim_args = {"lr": lr, "weight_decay": wd}
 
-    solver = SolverBtrfly(optim=optim, optim_args=optim_args)
-    solver.train(model, train_loader, val_loader, num_epochs=10, log_nth=50)
+    solver = SolverBtrfly(cfg=cfg, optim=optim, optim_args=optim_args)
+    solver.train(model, train_loader, val_loader, num_epochs=cfg.SOLVER.EPOCHS, log_nth=50)
 
-    # torch.save
+    torch.save(model.state_dict(), cfg.OUTPUT_PATH + "/model.pth")
 
 def main():
     parser = argparse.ArgumentParser(description="BtrflyNet training with PyTorch")
