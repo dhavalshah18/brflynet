@@ -6,6 +6,7 @@ import torch
 import torch.nn as nn
 import torch.optim
 from torch.utils.tensorboard import SummaryWriter
+import pathlib
 
 from .misc import *
 
@@ -14,7 +15,7 @@ class SolverBtrfly(object):
     default_optim_args = {"lr": 0.01,
                           "weight_decay": 0.}
 
-    def __init__(self, optim=torch.optim.Adam, optim_args={},
+    def __init__(self, cfg, optim=torch.optim.Adam, optim_args={},
                  loss_func=dice_loss_2arm):
 
         optim_args_merged = self.default_optim_args.copy()
@@ -26,7 +27,7 @@ class SolverBtrfly(object):
         self.best_val_model = None
 
         self._reset_histories()
-        self.writer = SummaryWriter()
+        self.writer = SummaryWriter(log_dir=pathlib.Path(cfg.OUTPUT_PATH).joinpath("runs/"))
 
     def _reset_histories(self):
         """Resets train and val histories for the accuracy and the loss. """
