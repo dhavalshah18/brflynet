@@ -96,7 +96,7 @@ class MRAProjected(data.Dataset):
         case_num = img_name[0:5]
 
         sample = {"top_image": axial_img, "bottom_image": sag_img, "top_label": axial_label, "bottom_label": sag_label,
-                  "case_num": case_num, "top_aneurysm": axial_aneurysm, "bottom_aneurysm": sag_aneurysm}
+                  "case_num": case_num, "aneurysm_top": axial_aneurysm, "aneurysm_bottom": sag_aneurysm}
 
         return sample
 
